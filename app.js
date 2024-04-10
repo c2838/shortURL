@@ -1,14 +1,24 @@
+// 載入epress
 const express = require('express')
 const app = express()
 const port = 3000
+// 載入express-handlebars
+const { engine } = require('express-handlebars')
+
+
 // 記錄短網址的JSON檔路徑
 const URLPath = './public/jsons/shortenURL'
 // 載入Nodejs的fs system
 const code_fs = require('fs')
 
+// 使用express-handlebars作為樣板
+app.engine('.hbs', engine({extname: '.hbs'}));
+app.set('view engine', 'hbs');
+app.set('views', './views');
+app.use(express.static('public'))
 // 根路徑
 app.get('/', (req, res) => {
-  res.send('Home page')
+  res.render('index')
 })
 
 // 短網址完成後路徑
