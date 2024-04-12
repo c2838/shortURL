@@ -4,64 +4,60 @@ const app = express()
 const port = 3000
 // 載入express-handlebars
 const { engine } = require('express-handlebars')
-
-// 記錄短網址的JSON檔路徑
-const URLPath = './public/jsons/shortenURL'
-// 載入Nodejs的fs system
-const code_fs = require('fs')
-
 // 使用express-handlebars作為樣板
 app.engine('.hbs', engine({extname: '.hbs'}));
 app.set('view engine', 'hbs');
 app.set('views', './views');
+// 使用靜態文件
 app.use(express.static('public'))
+// 載入middleware解析POST request
+app.use(express.urlencoded({ extended: true }))
+// 載入Nodejs的fs system
+const fs = require('fs')
+// 載入短網址代碼
+const shortenURL = require('./utilites/shortenURL')
+// 記錄短網址的JSON檔路徑
+const URLTablePath = './public/jsons/shortenURLTable'
 
-const shortURLBase = 'https://localhost:3000/'
+
+let URLTable = {}
+if(fs.existsSync(URLTablePath)) {
+  try {
+    const data = fs.readFileSync(URLTablePath)
+    URLTable = JSON.parse(data)
+  }
+  catch(err) {
+    console.log(err)
+  }
+}
 
 // 根路徑
 app.get('/', (req, res) => {
-  const originURL = req.query.inputURL
-  
-  res.render('index')
+  res.redirect('/shortenURL')
 })
 
 // 短網址完成後路徑
-app.get('/:shorten', (req, res) => {
-  res.render('shorten')
+app.get('/shortenURL', (req, res) => {
+  res.render('index')
 })
 
-//讀取短網址JSON檔
-code_fs.readFile(URLPath, 'utf8', (err,data) => {
-  if (err) console.error('err')
-  else {
-    let shortenURLs = shortenURLs ? JSON.parse(shortenURLs) : []
-    shortenURLs.push(data)
-    code_fs.writeFile(URLPath, JSON.stringify(shortenURLs), err =>{
-      if (err) console.log('wirtten fail')
-      else console.log('written sucess')
-    })
+app.post('/shortenURL', (req, res) => {
+  const longURL = req.body.inputURL
+  console.log(longURL)
+  // 檢查輸入是否為空
+  // if (!longURL) return 
+  // 檢查是否有相同的網址
+  if (Object.keys(URLTable).includes(longURL)) {
+    let shortURL = URLTable[longURL]
+    res.render('index', { shortURL })
+  } else {
+    let shortURL = shortenURL()
+    URLTable[longURL] = shortURL
+    // 將新網址寫入JSON
+    fs.writeFileSync(URLTablePath, JSON.stringify(URLTable))
+    res.render('index', { shortURL })
   }
 })
-
-// 產生亂數五位英數字
-function randomCode() {
-  let upperChar = [...Array(26)].map((_, i) => {
-    return String.fromCharCode(i + 65)
-  })
-  let lowerChar = [...Array(26)].map((_, i) => {
-    return String.fromCharCode(i + 97)
-  })
-  let num = [...Array(10)].map((_, i) => i)
-  let digit = num.concat(upperChar, lowerChar)
-  let fiveCodesArr = []
-  for (let i = 0; i < 5; i++) {
-    let random = digit[Math.floor(Math.random() * 62)]
-    fiveCodesArr.push(random)
-  }
-  let fiveCodeString = fiveCodesArr.join('')
-  return fiveCodeString 
-}
-
 
 
 app.listen(port, () => {
