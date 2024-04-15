@@ -13,9 +13,8 @@ function shortenURL() {
     let random = digit[Math.floor(Math.random() * 62)]
     fiveCodesArr.push(random)
   }
-  const shortURLBase = 'https://localhost:3000/'
   let fiveCodeString = fiveCodesArr.join('')
-  return shortURLBase + fiveCodeString 
+  return fiveCodeString 
 }
 
 module.exports = shortenURL

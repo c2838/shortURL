@@ -1,19 +1,16 @@
-{{#if shortURL}}
 <div class="container w-75 d-flex flex-column justify-content-center align-item-center">
   <h1 class="title mx-auto mb-3">URL Shortener</h1>
   <img src="https://assets-lighthouse.alphacamp.co/uploads/image/file/16716/ExportedContentImage_00.png"
     class="mx-auto mb-5" style="width: 15%;" alt="cover">
+{{#if shortURL}}
   <h4 class="sucess mx-auto mb-3">Sucess! Please Use This Link</h4>
-  <a href="#" class="shortURL mx-auto mb-3">123</a>
-  <button class="btn btn-outline-primary mx-auto" style="width: 10%;" type="button" id="button-addon2">copy</button>
-</div>
+  <a href="http://localhost:3000/{{ shortURL }}" id="shortURL" class="shortURL mx-auto mb-3">http://localhost:3000/{{ shortURL }}</a>
+  <button class="btn btn-outline-primary mx-auto" style="width: 10%;" type="button" onclick="copyURL()">copy</button>
 {{else}}
-<div class="container w-75 d-flex flex-column justify-content-center align-item-center">
-  <h1 class="title mx-auto mb-4">URL Shortener</h1>
-  <img src="https://assets-lighthouse.alphacamp.co/uploads/image/file/16716/ExportedContentImage_00.png"
-      class="mx-auto mb-4" style="width: 15%;" alt="cover">
-  <input type="text" name="inputURL" style="background-color: #eee;" class="form-control mb-3 mx-auto" placeholder="Input URL here" aria-label="URL column"
-      aria-describedby="button-addon2" value="{{longURL}}">
-  <button class="btn btn-outline-primary w-25 mx-auto" type="submit" id="button-addon2">shorten</button>
-</div>
+  <form action="/shortenURL" method="post" class="d-flex flex-column justify-content-center align-item-center">
+    <input type="url" name="inputURL" style="background-color: #eee;" class="form-control mb-3 mx-auto"
+      placeholder="Input URL here" aria-label="URL column" aria-describedby="button-addon2">
+    <button class="btn btn-outline-primary w-25 mx-auto" type="submit" id="button-addon2">shorten</button>
+  </form>
 {{/if}}
+</div>
