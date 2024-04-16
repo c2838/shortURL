@@ -42,7 +42,7 @@ npm run dev
 ```
 express server is running on http://localhost:3000
 ```
-5. 至瀏覽器網址列輸入 http://localhost:3000，即可瀏覽我的餐廳清單並進行操作~
+5. 至瀏覽器網址列輸入 http://localhost:3000，即可瀏覽短網址產生器並進行操作~
 
 
 ## 專案畫面
