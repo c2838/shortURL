@@ -8,9 +8,10 @@
   <button class="btn btn-outline-primary mx-auto" style="width: 10%;" type="button" onclick="copyURL()">copy</button>
 {{else}}
   <form action="/shortenURL" method="post" class="d-flex flex-column justify-content-center align-item-center">
-    <input type="url" name="inputURL" style="background-color: #eee;" class="form-control mb-3 mx-auto"
+    <input type="url" name="inputURL" style="background-color: #eee;" class="form-control mb-3 mx-auto" id="inputColumn"
       placeholder="Input URL here" aria-label="URL column" aria-describedby="button-addon2">
-    <button class="btn btn-outline-primary w-25 mx-auto" type="submit" id="button-addon2">shorten</button>
+    <button class="btn btn-outline-primary w-25 mx-auto" type="submit" id="button-addon2" onclick="notNull()">shorten</button>
   </form>
 {{/if}}
 </div>
+

@@ -43,9 +43,8 @@ app.get('/shortenURL', (req, res) => {
 
 app.post('/shortenURL', (req, res) => {
   const longURL = req.body.inputURL
-  // 檢查輸入是否為空
+  // 檢查輸入是否為空，導回首頁
   if (!longURL) {
-    console.log('網址不得為空')
     res.redirect('/')
     return
   }
