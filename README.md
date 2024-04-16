@@ -46,5 +46,5 @@ express server is running on http://localhost:3000
 
 
 ## 專案畫面
-![Alt text](https://imgur.com/a/qpkCqvh.jpg)
-![Alt text](https://imgur.com/a/fTZfGhG.jpg)
+![Alt text](https://i.imgur.com/nFHZ5CZ.png)
+![Alt text](https://i.imgur.com/jRZrWv4.png)
