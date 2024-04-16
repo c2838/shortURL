@@ -1,5 +1,6 @@
 // 短網址輸出函式
 function shortenURL() {
+  // const URLs = require('./public/jsons/shortenURLTable.json')
   let upperChar = [...Array(26)].map((_, i) => {
     return String.fromCharCode(i + 65)
   })
@@ -14,6 +15,12 @@ function shortenURL() {
     fiveCodesArr.push(random)
   }
   let fiveCodeString = fiveCodesArr.join('')
+  // 檢查是否有重複五位英數字
+  // for (let key of Object.keys(URLs)) {
+  //     if (fiveCodeString === URLs[key]) {
+  //       return shortenURL()
+  //     }
+  //   }
   return fiveCodeString 
 }
 

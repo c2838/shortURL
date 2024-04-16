@@ -43,11 +43,11 @@ app.get('/shortenURL', (req, res) => {
 
 app.post('/shortenURL', (req, res) => {
   const longURL = req.body.inputURL
-  console.log(longURL)
   // 檢查輸入是否為空
   if (!longURL) {
     console.log('網址不得為空')
     res.redirect('/')
+    return
   }
   // 檢查是否有相同的網址
   if (Object.keys(URLTable).includes(longURL)) {
