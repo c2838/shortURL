@@ -14,22 +14,26 @@ app.use(express.static('public'))
 app.use(express.urlencoded({ extended: true }))
 // 載入Nodejs的fs system
 const fs = require('fs')
-// 載入短網址代碼
-const shortenURL = require('./utilites/shortenURL')
 // 記錄短網址的JSON檔路徑
 const URLTablePath = './public/jsons/shortenURLTable.json'
-
 // 建立短網址轉換表，並檢查檔案是否存在
 let URLTable = {}
 if(fs.existsSync(URLTablePath)) {
   try {
-    const data = fs.readFileSync(URLTablePath)
-    URLTable = JSON.parse(data)
+    let data = fs.readFileSync(URLTablePath)
+    if (data) {
+      URLTable = JSON.parse(data)
+    }
   }
   catch(err) {
     console.log(err)
   }
+} else {
+  // 若無初始文件，則建立並寫入空物件
+  fs.writeFileSync(URLTablePath, JSON.stringify(URLTable));
 }
+// 載入短網址代碼函式
+const shortenURL = require('./utilites/shortenURL')
 
 // 根路徑
 app.get('/', (req, res) => {
@@ -41,13 +45,9 @@ app.get('/shortenURL', (req, res) => {
   res.render('index')
 })
 
+// 利用post方法傳送原始網址
 app.post('/shortenURL', (req, res) => {
   const longURL = req.body.inputURL
-  // 檢查輸入是否為空，導回首頁
-  if (!longURL) {
-    res.redirect('/')
-    return
-  }
   // 檢查是否有相同的網址
   if (Object.keys(URLTable).includes(longURL)) {
     let shortURL = URLTable[longURL]
@@ -63,7 +63,7 @@ app.post('/shortenURL', (req, res) => {
 
 // 利用短網址導向回原始網頁
 app.get('/:fiveCode', (req, res) => {
-  let fiveCode = req.params.fiveCode
+  const fiveCode = req.params.fiveCode
   for(let key in URLTable) {
     if (URLTable[key] === fiveCode) {
       res.redirect(key)
@@ -73,7 +73,6 @@ app.get('/:fiveCode', (req, res) => {
   // 若無對應短網址則報錯
   res.status(404).send('Sorry, the shortURL is not found.')
 })
-
 
 app.listen(port, () => {
   console.log(`express server is running on http://localhost:${port}`)

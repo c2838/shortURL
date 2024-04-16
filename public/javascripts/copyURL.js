@@ -1,5 +1,5 @@
 async function copyURL() {
-  let URL = document.querySelector('#shortURL')
+  const URL = document.querySelector('#shortURL')
   try {
     await navigator.clipboard.writeText(URL.innerText)
     alert('copy already sucessed')
