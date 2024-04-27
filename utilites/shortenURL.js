@@ -1,5 +1,7 @@
-// 到跟目錄去找public資料夾
-const URLs = require('../public/jsons/shortenURLTable.json')
+const URLTablePath = './public/jsons/shortenURLTable.json'
+// 載入Nodejs的fs system
+const fs = require('fs')
+
 // 建立英數字陣列
 const upperChars = [...Array(26)].map((_, i) => {
   return String.fromCharCode(i + 65)
@@ -11,6 +13,20 @@ const nums = [...Array(10)].map((_, i) => i)
 // const digits = nums.concat(upperChars, lowerChars)
 const digits = [...upperChars, ...lowerChars, ...nums]
 
+// 讀取URL對照表，用以檢查是否有重複英數字組
+let URLTable = {}
+if(fs.existsSync(URLTablePath)) {
+  try {
+    let data = fs.readFileSync(URLTablePath)
+    if (data) {
+      URLTable = JSON.parse(data)
+    }
+  }
+  catch(err) {
+    console.log(err)
+  }
+}
+
 // 短網址輸出函式
 function shortenURL() {
 
@@ -21,11 +37,12 @@ function shortenURL() {
   }
   let fiveCodeString = fiveCodesArr.join('')
   // 檢查是否有重複五位英數字
-  for (let key of Object.keys(URLs)) {
-      if (fiveCodeString === URLs[key]) {
+  for (let key of Object.keys(URLTable)) {
+      if (fiveCodeString === URLTable[key]) {
         return shortenURL()
       }
     }
+    console.log(URLTable)
   return fiveCodeString 
 }
 

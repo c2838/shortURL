@@ -4,6 +4,13 @@ const app = express()
 const port = 3000
 // 載入express-handlebars
 const { engine } = require('express-handlebars')
+// 載入Nodejs的fs system
+const fs = require('fs')
+// 載入短網址代碼函式
+const shortenURL = require('./utilites/shortenURL')
+// 記錄短網址的JSON檔路徑
+const URLTablePath = './public/jsons/shortenURLTable.json'
+
 // 使用express-handlebars作為樣板
 app.engine('.hbs', engine({extname: '.hbs'}));
 app.set('view engine', 'hbs');
@@ -12,10 +19,7 @@ app.set('views', './views');
 app.use(express.static('public'))
 // 載入middleware解析POST request，開關為true，解析資料型態可不只為string or array
 app.use(express.urlencoded({ extended: true }))
-// 載入Nodejs的fs system
-const fs = require('fs')
-// 記錄短網址的JSON檔路徑
-const URLTablePath = './public/jsons/shortenURLTable.json'
+
 // 建立短網址轉換表，並檢查檔案是否存在
 let URLTable = {}
 if(fs.existsSync(URLTablePath)) {
@@ -32,8 +36,7 @@ if(fs.existsSync(URLTablePath)) {
   // 若無初始文件，則建立並寫入空物件
   fs.writeFileSync(URLTablePath, JSON.stringify(URLTable));
 }
-// 載入短網址代碼函式
-const shortenURL = require('./utilites/shortenURL')
+
 
 // 根路徑
 app.get('/', (req, res) => {
