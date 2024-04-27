@@ -8,6 +8,10 @@ const { engine } = require('express-handlebars')
 const fs = require('fs')
 // 載入短網址代碼函式
 const shortenURL = require('./utilites/shortenURL')
+// 載入URLTable創建函式
+const URLTableGenerator = require('./utilites/URLTableGenerator')
+// 建立短網址轉換表物件變數，順帶檢查檔案是否存在
+const URLTable = URLTableGenerator()
 // 記錄短網址的JSON檔路徑
 const URLTablePath = './public/jsons/shortenURLTable.json'
 
@@ -19,24 +23,6 @@ app.set('views', './views');
 app.use(express.static('public'))
 // 載入middleware解析POST request，開關為true，解析資料型態可不只為string or array
 app.use(express.urlencoded({ extended: true }))
-
-// 建立短網址轉換表，並檢查檔案是否存在
-let URLTable = {}
-if(fs.existsSync(URLTablePath)) {
-  try {
-    let data = fs.readFileSync(URLTablePath)
-    if (data) {
-      URLTable = JSON.parse(data)
-    }
-  }
-  catch(err) {
-    console.log(err)
-  }
-} else {
-  // 若無初始文件，則建立並寫入空物件
-  fs.writeFileSync(URLTablePath, JSON.stringify(URLTable));
-}
-
 
 // 根路徑
 app.get('/', (req, res) => {
@@ -56,6 +42,7 @@ app.post('/shortenURL', (req, res) => {
     let shortURL = URLTable[longURL]
     res.render('index', { shortURL })
   } else {
+    // 若無相同網址則新建短網址
     let shortURL = shortenURL()
     URLTable[longURL] = shortURL
     // 將新網址寫入JSON

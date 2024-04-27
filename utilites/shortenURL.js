@@ -1,6 +1,4 @@
-const URLTablePath = './public/jsons/shortenURLTable.json'
-// 載入Nodejs的fs system
-const fs = require('fs')
+const URLTableGenerator = require('./URLTableGenerator')
 
 // 建立英數字陣列
 const upperChars = [...Array(26)].map((_, i) => {
@@ -15,17 +13,7 @@ const digits = [...upperChars, ...lowerChars, ...nums]
 
 // 讀取URL對照表，用以檢查是否有重複英數字組
 let URLTable = {}
-if(fs.existsSync(URLTablePath)) {
-  try {
-    let data = fs.readFileSync(URLTablePath)
-    if (data) {
-      URLTable = JSON.parse(data)
-    }
-  }
-  catch(err) {
-    console.log(err)
-  }
-}
+URLTableGenerator(URLTable)
 
 // 短網址輸出函式
 function shortenURL() {
